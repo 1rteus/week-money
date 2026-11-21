@@ -362,19 +362,6 @@ function initModals() {
     });
 }
 
-function initQuickAmounts() {
-    document.querySelectorAll('.quick').forEach((group) => {
-        group.addEventListener('click', (event) => {
-            const btn = event.target.closest('button[data-amount]');
-            if (!btn) return;
-            const input = btn.closest('form').querySelector('.amount-input');
-            input.value = btn.dataset.amount;
-            input.classList.remove('invalid');
-            input.focus();
-        });
-    });
-}
-
 function initCategories() {
     document.getElementById('categories').addEventListener('click', (event) => {
         const btn = event.target.closest('.cat-btn');
@@ -491,7 +478,6 @@ function init() {
     }
 
     initModals();
-    initQuickAmounts();
     initCategories();
     initForms();
     initDelete();

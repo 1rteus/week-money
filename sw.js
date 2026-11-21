@@ -1,4 +1,4 @@
-const CACHE_NAME = 'week-money-v1';
+const CACHE_NAME = 'week-money-v2';
 const ASSETS = [
     './',
     './index.html',
