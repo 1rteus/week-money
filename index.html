@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0d0f1a">
+    <meta name="description" content="Простой учёт денег на неделю: добавь сумму и записывай траты">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Неделя">
+    <title>Деньги на неделю</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div>
+                <h1>Деньги на неделю</h1>
+                <div class="week-range" id="weekRange">—</div>
+            </div>
+            <button class="install-btn hidden" id="installBtn" type="button">Установить</button>
+        </header>
+
+        <main class="main">
+            <section class="ring-card" id="ringCard">
+                <div class="ring-wrap">
+                    <svg class="ring-svg" viewBox="0 0 240 240" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ffe66d"/>
+                                <stop offset="100%" stop-color="#ffd93d"/>
+                            </linearGradient>
+                            <linearGradient id="ringGradientOver" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ff6b6b"/>
+                                <stop offset="100%" stop-color="#ff3333"/>
+                            </linearGradient>
+                        </defs>
+                        <circle class="ring-bg" cx="120" cy="120" r="100"/>
+                        <circle class="ring-progress" id="ringProgress" cx="120" cy="120" r="100"/>
+                    </svg>
+                    <div class="ring-center">
+                        <div class="ring-label" id="ringLabel">Осталось</div>
+                        <div class="ring-amount" id="remaining">0 ₽</div>
+                        <div class="ring-sub" id="ringSub">Добавь деньги на неделю</div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <span>Бюджет</span>
+                        <strong id="budget">0 ₽</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Потрачено</span>
+                        <strong id="spent">0 ₽</strong>
+                    </div>
+                    <div class="stat">
+                        <span>В день</span>
+                        <strong id="perDay">—</strong>
+                    </div>
+                </div>
+            </section>
+
+            <div class="actions">
+                <button class="action-btn topup" id="topupBtn" type="button">
+                    <span class="action-icon">＋</span>
+                    <span>
+                        <strong>Пополнить</strong>
+                        <small>деньги на неделю</small>
+                    </span>
+                </button>
+                <button class="action-btn expense" id="expenseBtn" type="button">
+                    <span class="action-icon">−</span>
+                    <span>
+                        <strong>Трата</strong>
+                        <small>записать расход</small>
+                    </span>
+                </button>
+            </div>
+
+            <section class="section">
+                <div class="section-head">
+                    <h2>Операции за неделю</h2>
+                    <span id="opsCount"></span>
+                </div>
+                <div class="ops" id="opsList"></div>
+            </section>
+
+            <section class="section history-section">
+                <div class="section-head">
+                    <h2>Прошлые недели</h2>
+                </div>
+                <div class="history" id="historyList"></div>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="topupOverlay">
+        <div class="modal">
+            <div class="modal-head">
+                <h3>Пополнить неделю</h3>
+                <button class="close-btn" type="button" data-close="topupOverlay" aria-label="Закрыть">&times;</button>
+            </div>
+            <form id="topupForm" novalidate>
+                <div class="field">
+                    <label for="topupAmount">Сумма (₽)</label>
+                    <input class="amount-input" type="text" inputmode="decimal" id="topupAmount" placeholder="0" autocomplete="off" required>
+                </div>
+                <div class="quick">
+                    <button type="button" data-amount="500">500</button>
+                    <button type="button" data-amount="1000">1 000</button>
+                    <button type="button" data-amount="2000">2 000</button>
+                    <button type="button" data-amount="3000">3 000</button>
+                </div>
+                <div class="field">
+                    <label for="topupNote">Комментарий (необязательно)</label>
+                    <input type="text" id="topupNote" placeholder="Например, карманные" maxlength="80">
+                </div>
+                <button class="submit" type="submit">Добавить деньги</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="expenseOverlay">
+        <div class="modal">
+            <div class="modal-head">
+                <h3>Новая трата</h3>
+                <button class="close-btn" type="button" data-close="expenseOverlay" aria-label="Закрыть">&times;</button>
+            </div>
+            <form id="expenseForm" novalidate>
+                <div class="field">
+                    <label for="expenseAmount">Сумма (₽)</label>
+                    <input class="amount-input" type="text" inputmode="decimal" id="expenseAmount" placeholder="0" autocomplete="off" required>
+                </div>
+                <div class="quick">
+                    <button type="button" data-amount="100">100</button>
+                    <button type="button" data-amount="300">300</button>
+                    <button type="button" data-amount="500">500</button>
+                    <button type="button" data-amount="1000">1 000</button>
+                </div>
+                <div class="field">
+                    <label>Категория</label>
+                    <div class="categories" id="categories">
+                        <button class="cat-btn selected" type="button" data-cat="food">🍔 Еда</button>
+                        <button class="cat-btn" type="button" data-cat="transport">🚌 Проезд</button>
+                        <button class="cat-btn" type="button" data-cat="fun">🎮 Развлечения</button>
+                        <button class="cat-btn" type="button" data-cat="other">📦 Другое</button>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="expenseNote">Комментарий (необязательно)</label>
+                    <input type="text" id="expenseNote" placeholder="Например, обед" maxlength="80">
+                </div>
+                <button class="submit expense-submit" type="submit">Записать трату</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <rect width="512" height="512" rx="112" fill="#0d0f1a"/>
+    <circle cx="256" cy="256" r="150" fill="none" stroke="#2a2f4a" stroke-width="36"/>
+    <circle cx="256" cy="256" r="150" fill="none" stroke="#ffe66d" stroke-width="36" stroke-linecap="round" stroke-dasharray="942.48" stroke-dashoffset="235.62" transform="rotate(-90 256 256)"/>
+    <text x="256" y="302" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="132" font-weight="700" fill="#f0f0f5">₽</text>
+</svg>
